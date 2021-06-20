@@ -2,6 +2,7 @@ import logging
 
 from flask_restful import Resource
 
+from rental_be.models.ops import ProductBooking, ProductReturn
 from rental_be.models.product import Product
 from mongoengine.errors import NotUniqueError
 
@@ -33,14 +34,29 @@ class SampleData(Resource):
         """
         try:
             response = {}
-            response['delete_count'] = Product.objects().delete()
+            response['product_delete_count'] = Product.objects().delete()
+            response['booking_delete_count'] = ProductBooking.objects().delete()
+            response['return_delete_count'] = ProductReturn.objects().delete()
         except Exception as excp:
             logging.exception(excp)
-        logging.warning(response)
         return response, 200
 
 
+class DataSummary(Resource):
+    def get(self):
+        """Data summary resource
+        """
+        try:
+            response = {}
+            response['product_count'] = Product.objects().count()
+            response['booking_count'] = ProductBooking.objects().count()
+            response['return_count'] = ProductReturn.objects().count()
+        except Exception as excp:
+            logging.exception(excp)
+        return response, 200
+
 # -----------------------------------------------------------------------------
+
 
 # Sample inventory of products
 sample_data = [

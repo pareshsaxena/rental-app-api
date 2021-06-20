@@ -3,7 +3,7 @@
 from flask import Blueprint
 from flask_restful import Api
 
-from rental_be.api.v1.data import SampleData
+from rental_be.api.v1.data import SampleData, DataSummary
 from rental_be.api.v1.ops import (
     FeeEstimate,
     FeeTotal,
@@ -33,3 +33,4 @@ rental_bp_api.add_resource(FeeTotal, '/product-ops/total-fee')
 
 # Sample Data
 rental_bp_api.add_resource(SampleData, '/data')
+rental_bp_api.add_resource(DataSummary, '/data/summary')
