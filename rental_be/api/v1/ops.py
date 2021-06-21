@@ -134,15 +134,13 @@ class ProductBooking(Resource):
             if not product:
                 return {'error': 'product not found'}, 404
             # 1. Only available products in the inventory can be booked
-            if not is_product_bookable(product_code=product.code,
-                                       availability=product.availability,
-                                       durability=product.durability):
+            if not product.availability:
                 return {'error': 'product is not available for booking'}, 400
-            # # 2. Only products that are not already booked can be booked
-            # if is_product_booked(product_code=product.code,
-            #                      from_date=booking_req.from_date,
-            #                      to_date=booking_req.to_date):
-            #     return {'error': 'product is already booked in the requested period'}, 403
+            # 2. Only products that don't have an overlapping booking can be booked
+            if is_product_booked(product_code=product.code,
+                                 from_date=booking_req.from_date,
+                                 to_date=booking_req.to_date):
+                return {'error': 'product is already booked in the requested period'}, 403
             # 3. Calculate rental period
             rent_period = (booking_req.to_date-booking_req.from_date).days
             # 4. Calculate rental fee estimate
@@ -158,7 +156,6 @@ class ProductBooking(Resource):
                 from_date=booking_req.from_date,
                 to_date=booking_req.to_date
             )
-            product.availability = False
             product.save()
             # Construct response
             response = ProductBookingResponse(

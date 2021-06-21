@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 from typing import Optional
 
@@ -82,16 +83,21 @@ def is_product_booked(
     # B0: Existing booking start date
     # B1: Existing booking end date
     # Find an overlapping existing booking
-    booking = ProductBooking.objects(
+    bookings = ProductBooking.objects(
         # Case 0: [B0----[BR0----(B1)]----BR1]
         (Q(to_date__lte=to_date) & Q(to_date__gte=from_date)) |
         # Case 1: [BR0----[(B0)----BR1]----B1]
         (Q(from_date__lte=to_date) & Q(from_date__gte=from_date)) |
         # Case 2: [(B0)----[BR0----BR1]----(B1)]
         (Q(from_date__lte=from_date) & Q(to_date__gte=to_date))
-    ).first()
-    if booking:
-        return True
+    ).all()
+    if bookings:
+        booking_ids = [str(x.pk) for x in bookings]
+        return_docs = ProductReturn.objects(booking_id__in=booking_ids).all()
+        if len(bookings) > len(return_docs):        
+            return True
+        else:
+            return False
     else:
         return False
 
