@@ -212,8 +212,12 @@ class ProductReturn(Resource):
                 booked_from_date=booking.from_date,
                 booked_to_date=booking.to_date,
             )
-            product.availability = True
             product.durability = max(0, new_durability)
+            if product.durability == 0:
+                # Product needs repair/maintenance
+                product.availability = False
+            else:
+                product.availability = True
             product.mileage = return_req.mileage
             product.save()
             # 6. Create a return record
