@@ -1,4 +1,3 @@
-import logging
 from datetime import datetime
 from typing import Optional
 
@@ -94,7 +93,7 @@ def is_product_booked(
     if bookings:
         booking_ids = [str(x.pk) for x in bookings]
         return_docs = ProductReturn.objects(booking_id__in=booking_ids).all()
-        if len(bookings) > len(return_docs):        
+        if len(bookings) > len(return_docs):
             return True
         else:
             return False

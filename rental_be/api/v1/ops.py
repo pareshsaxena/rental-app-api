@@ -5,9 +5,6 @@ from datetime import datetime
 
 from flask_restful import Resource, request
 
-from rental_be.controllers.ops import (
-    is_product_bookable,
-)
 from rental_be.controllers.compute import (
     calculate_durability,
     calculate_rent,
@@ -140,7 +137,7 @@ class ProductBooking(Resource):
             if is_product_booked(product_code=product.code,
                                  from_date=booking_req.from_date,
                                  to_date=booking_req.to_date):
-                return {'error': 'product is already booked in the requested period'}, 403
+                return {'error': 'product is already booked in the requested period'}, 403          # noqa E501
             # 3. Calculate rental period
             rent_period = (booking_req.to_date-booking_req.from_date).days
             # 4. Calculate rental fee estimate
