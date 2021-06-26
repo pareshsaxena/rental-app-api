@@ -1,7 +1,7 @@
 """API blueprint module
 """
 from flask import Blueprint
-from flask_restful import Api
+from flask_restful import Api                               # type: ignore[import]
 
 from rental_be.api.v1.data import SampleData, DataSummary
 from rental_be.api.v1.ops import (

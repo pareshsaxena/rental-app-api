@@ -1,13 +1,13 @@
 """Mongoengine: Flask ODM extension
 """
-from bson import json_util
+from bson import json_util                                  # type: ignore[import]
 from typing import Dict, Optional, Type
 
 from flask import Flask, current_app
 from flask.json import JSONEncoder
-from mongoengine.base import BaseDocument
-from mongoengine.queryset import QuerySet
-from pymongo import MongoClient
+from mongoengine.base import BaseDocument                   # type: ignore[import]
+from mongoengine.queryset import QuerySet                   # type: ignore[import]
+from pymongo import MongoClient                             # type: ignore[import]
 
 from rental_be.db.mongo_connection import create_connections
 
@@ -42,6 +42,7 @@ class MongoEngine:
         """
         if not app or not isinstance(app, Flask):
             raise Exception('Invalid Flask application instance')
+        # Store the app on the MongoEngine instance - use case: multiple applications
         self.app = app
         app.extensions = getattr(app, "extensions", {})
 
@@ -74,10 +75,11 @@ class MongoEngine:
         return current_app.extensions['mongoengine'][self]['conn']
 
 
-def current_mongoengine_instance() -> Type[MongoEngine]:
+def current_mongoengine_instance() -> Optional[MongoEngine]:
     """Returns the MongoEngine object associated with the current Flask app
     """
     me = current_app.extensions.get('mongoengine', {})
     for k, _ in me.items():
         if isinstance(k, MongoEngine):
             return k
+    return None

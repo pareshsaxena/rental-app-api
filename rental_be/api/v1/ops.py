@@ -3,7 +3,7 @@
 import logging
 from datetime import datetime
 
-from flask_restful import Resource, request
+from flask_restful import Resource, request                 # type: ignore[import]
 
 from rental_be.controllers.compute import (
     calculate_durability,
@@ -183,21 +183,21 @@ class ProductReturn(Resource):
             product = get_product(code=return_req.code)
             if not product:
                 return {'error': 'product not found'}, 404
-
             # 1. Products can only be returned if they have been booked earlier
             if get_return(booking_id=return_req.booking_id):
                 return {'error': 'return already processed'}, 400
-
             # 2. Product mileage cannot be lower than what it
             # was when the product was booked
             if product.mileage and return_req.mileage:
                 if return_req.mileage < product.mileage:
                     return {'error': 'return mileage cannot be lower than booking mileage'}, 400        # noqa E401
-
             # 3. Only products with a valid booking ID can be returned
             booking = get_booking(booking_id=return_req.booking_id)
             if not booking:
                 return {'error': 'booking does not exist'}, 400
+            # 4. Ensure that a previously booked product is being returned
+            if booking.product_code != return_req.code:
+                return {'error': 'product code does not match with booking'}, 400
             # 4. Calculate new durability score
             new_durability = calculate_durability(
                 product_type=product.type,

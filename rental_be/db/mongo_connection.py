@@ -1,7 +1,7 @@
 from typing import Dict
 
-import mongoengine
-from pymongo import ReadPreference, uri_parser
+import mongoengine                                          # type: ignore[import]
+from pymongo import ReadPreference, uri_parser              # type: ignore[import]
 
 
 __all__ = (
@@ -93,16 +93,7 @@ def get_connection_settings(config: Dict) -> Dict:
     # Sanitize all the settings living under a "MONGODB_SETTINGS" config var
     if 'MONGODB_SETTINGS' in config:
         settings = config['MONGODB_SETTINGS']
-        # If MONGODB_SETTINGS is a list of settings dicts, sanitize each
-        # dict separately before returning the list
-        if isinstance(settings, list):
-            # List of connection settings.
-            settings_list = []
-            for setting in settings:
-                settings_list.append(_sanitize_settings(setting))
-            return settings_list
-        else:
-            return _sanitize_settings(settings)
+        return _sanitize_settings(settings)
     # If "MONGODB_SETTINGS" doesn't exist, sanitize the "MONGODB_" keys
     # as if they all describe a single connection
     else:
@@ -124,17 +115,6 @@ def create_connections(config):
 
     # Get sanitized connection settings based on the config
     conn_settings = get_connection_settings(config)
-
-    # If conn_settings is a list, set up each item as a separate connection
-    # and return a dict of connection aliases and their connections.
-    if isinstance(conn_settings, list):
-        connections = {}
-        for each in conn_settings:
-            alias = each['alias']
-            connections[alias] = _connect(each)
-        return connections
-
-    # Otherwise, return a single connection
     return _connect(conn_settings)
 
 

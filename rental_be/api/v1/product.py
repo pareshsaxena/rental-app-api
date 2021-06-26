@@ -1,7 +1,7 @@
 import logging
 from math import ceil
 
-from flask_restful import Resource, request
+from flask_restful import Resource, request                 # type: ignore[import]
 
 from rental_be.models.product import (
     get_product,

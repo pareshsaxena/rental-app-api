@@ -1,10 +1,10 @@
 import logging
 
-from flask_restful import Resource
+from flask_restful import Resource                          # type: ignore[import]
 
 from rental_be.models.ops import ProductBooking, ProductReturn
 from rental_be.models.product import Product
-from mongoengine.errors import NotUniqueError
+from mongoengine.errors import NotUniqueError               # type: ignore[import]
 
 
 class SampleData(Resource):

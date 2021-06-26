@@ -1,7 +1,7 @@
 from enum import Enum
 
-import mongoengine as ME
-from mongoengine.queryset.visitor import Q
+import mongoengine as ME                                    # type: ignore[import]
+from mongoengine.queryset.visitor import Q                  # type: ignore[import]
 
 from rental_be.schema.internal import ProductInventory
 

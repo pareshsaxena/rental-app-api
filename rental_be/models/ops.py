@@ -1,8 +1,8 @@
 from datetime import datetime
 from typing import Optional
 
-import mongoengine as ME
-from mongoengine.queryset.visitor import Q
+import mongoengine as ME                                    # type: ignore[import]
+from mongoengine.queryset.visitor import Q                  # type: ignore[import]
 
 
 class ProductBooking(ME.Document):

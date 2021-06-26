@@ -21,7 +21,11 @@ def calculate_durability(
     if product_type == ProductType.plain:
         return max(0, durability - rent_period)
     elif product_type == ProductType.meter:
+        if not mileage:
+            raise ValueError('`mileage` cannot be None for `meter` product type')
         return max(0, round(durability - (2 * rent_period) - 2 * (mileage / 10)))
+    else:
+        raise Exception('Invalid product type: %s', product_type)
 
 
 def calculate_rent(
